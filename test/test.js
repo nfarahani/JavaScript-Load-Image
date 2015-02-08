@@ -40,8 +40,11 @@
             'hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmq' +
             'srO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8v' +
             'P09fb3+Pn6/9oADAMBAAIRAxEAPwD+/iiiigD/2Q==',
+        b64DataTXT = 'VGhpcyBpcyBhIHNhbXBsZSB0ZXh0IGZpbGUu',
         imageUrlJPEG = 'data:image/jpeg;base64,' + b64DataJPEG,
+        imageUrlJPEGBad = 'data:image/jpeg;base64,' + b64DataTXT,
         blobJPEG = canCreateBlob && window.dataURLtoBlob(imageUrlJPEG),
+        blobJPEGBad = canCreateBlob && window.dataURLtoBlob(imageUrlJPEGBad),
         createBlob = function (data, type) {
             try {
                 return new Blob([data], {type: type});
@@ -453,6 +456,21 @@
             });
         });
 
+        it('Should set error information if invalid JPG data', function (done) {
+            loadImage.parseMetaData(blobJPEGBad, function (data) {
+                expect(data.error).to.be(true);
+                expect(data.error_msg).to.be('Invalid JPEG file: Missing JPEG marker.');
+                done();
+            });
+        });
+
+        it('Should NOT set error information if valid JPG data', function (done) {
+            loadImage.parseMetaData(blobJPEG, function (data) {
+                expect(data.error).to.not.be(true);
+                expect(data.error_msg).to.not.be('Invalid JPEG file: Missing JPEG marker.');
+                done();
+            });
+        });
     });
 
 }(

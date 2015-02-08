@@ -130,7 +130,8 @@
                             }
                         }
                     } else {
-                        console.log('Invalid JPEG file: Missing JPEG marker.');
+                        data.error = true;
+                        data.error_msg = 'Invalid JPEG file: Missing JPEG marker.';
                     }
                     callback(data);
                 },
